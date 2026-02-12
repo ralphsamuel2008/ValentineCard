@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You... 💜</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ffeef8 0%, #f5e6ff 25%, #e6d5f5 50%, #d5c5eb 75%, #ffd6e8 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Floating hearts animation */
+        .heart {
+            position: fixed;
+            font-size: 24px;
+            opacity: 0;
+            animation: float 6s ease-in infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* First Page Styles */
+        .first-page {
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .mystery-box {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 30px;
+            padding: 60px 40px;
+            box-shadow: 0 20px 60px rgba(139, 69, 139, 0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(216, 191, 216, 0.5);
+            position: relative;
+            overflow: visible;
+        }
+
+        .flower-decoration {
+            position: absolute;
+            font-size: 35px;
+            opacity: 0.6;
+            animation: sway 3s ease-in-out infinite;
+        }
+
+        .flower-top-left {
+            top: -15px;
+            left: -15px;
+            animation-delay: 0s;
+        }
+
+        .flower-top-right {
+            top: -15px;
+            right: -15px;
+            animation-delay: 1s;
+        }
+
+        .flower-bottom-left {
+            bottom: -15px;
+            left: -15px;
+            animation-delay: 2s;
+        }
+
+        .flower-bottom-right {
+            bottom: -15px;
+            right: -15px;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes sway {
+            0%, 100% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+        }
+
+        .lock-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: pulse 2s ease-in-out infinite;
+            filter: drop-shadow(0 4px 8px rgba(139, 69, 139, 0.3));
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1) rotate(-5deg); }
+            50% { transform: scale(1.1) rotate(5deg); }
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5em;
+            color: #8b5a8b;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(139, 90, 139, 0.2);
+        }
+
+        .suspense-text {
+            font-size: 1.1em;
+            color: #9370a8;
+            margin-bottom: 40px;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .choice-btn {
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(139, 69, 139, 0.3);
+        }
+
+        .yes-btn {
+            background: linear-gradient(135deg, #c8a8e9 0%, #b088d6 100%);
+            color: white;
+        }
+
+        .yes-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(139, 69, 139, 0.4);
+        }
+
+        .no-btn {
+            background: white;
+            color: #9370a8;
+            border: 2px solid #c8a8e9;
+        }
+
+        .no-btn:hover {
+            background: #f5e6ff;
+            transform: translateY(-3px);
+        }
+
+        /* Second Page Styles */
+        .second-page {
+            display: none;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(50px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+
+        .letter-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 50px 40px;
+            box-shadow: 0 20px 60px rgba(139, 69, 139, 0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(216, 191, 216, 0.5);
+            text-align: left;
+            position: relative;
+            overflow: visible;
+        }
+
+        .letter-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .letter-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2em;
+            color: #8b5a8b;
+            margin-bottom: 10px;
+        }
+
+        .sparkle {
+            font-size: 30px;
+            animation: sparkle 1.5s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .letter-content {
+            font-size: 1.05em;
+            color: #6b4c6b;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .letter-content p {
+            margin-bottom: 20px;
+        }
+
+        .highlight {
+            color: #9370a8;
+            font-weight: 500;
+        }
+
+        .signature {
+            text-align: right;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3em;
+            color: #8b5a8b;
+            margin-top: 30px;
+            font-style: italic;
+        }
+
+        .easter-egg {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px dashed #d8bfd8;
+        }
+
+        .easter-egg-text {
+            font-size: 0.9em;
+            color: #9370a8;
+            margin-bottom: 15px;
+        }
+
+        .secret-message {
+            background: linear-gradient(135deg, #f5e6ff 0%, #e6d5f5 100%);
+            padding: 20px;
+            border-radius: 15px;
+            font-family: 'Playfair Display', serif;
+            color: #8b5a8b;
+            font-size: 1.1em;
+            box-shadow: inset 0 2px 10px rgba(139, 69, 139, 0.2);
+        }
+
+        /* No button easter egg */
+        .hidden {
+            display: none;
+        }
+
+        .sad-page {
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        .sad-box {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 30px;
+            padding: 60px 40px;
+            box-shadow: 0 20px 60px rgba(139, 69, 139, 0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(216, 191, 216, 0.5);
+        }
+
+        .sad-emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .retry-btn {
+            margin-top: 30px;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            background: linear-gradient(135deg, #c8a8e9 0%, #b088d6 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(139, 69, 139, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .retry-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(139, 69, 139, 0.4);
+        }
+
+        /* Response Box Styles */
+        .response-section {
+            margin-top: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #ffeef8 0%, #f5e6ff 100%);
+            border-radius: 20px;
+            border: 2px dashed #c8a8e9;
+        }
+
+        .response-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4em;
+            color: #8b5a8b;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .response-subtitle {
+            font-size: 0.9em;
+            color: #9370a8;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .response-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #d8bfd8;
+            border-radius: 15px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1em;
+            color: #6b4c6b;
+            resize: vertical;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .response-textarea:focus {
+            outline: none;
+            border-color: #b088d6;
+            box-shadow: 0 0 15px rgba(176, 136, 214, 0.3);
+        }
+
+        .response-textarea::placeholder {
+            color: #c8a8e9;
+        }
+
+        .send-btn {
+            margin-top: 15px;
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            background: linear-gradient(135deg, #c8a8e9 0%, #b088d6 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(139, 69, 139, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(139, 69, 139, 0.4);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .response-sent {
+            text-align: center;
+            padding: 30px;
+            color: #8b5a8b;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2em;
+        }
+
+        .response-sent-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- First Page -->
+        <div class="first-page" id="firstPage">
+            <div class="mystery-box">
+                <div class="flower-decoration flower-top-left">🪻</div>
+                <div class="flower-decoration flower-top-right">🌸</div>
+                <div class="flower-decoration flower-bottom-left">💐</div>
+                <div class="flower-decoration flower-bottom-right">🪻</div>
+                <div class="lock-icon">🎁</div>
+                <h1>A Message Awaits...</h1>
+                <p class="suspense-text">
+                    Something special has been prepared for you.<br>
+                    But the question is...<br>
+                    <strong>Are you ready to unlock it?</strong>
+                </p>
+                <div class="button-container">
+                    <button class="choice-btn yes-btn" onclick="unlockMessage()">Yes, I'm Ready 💜</button>
+                    <button class="choice-btn no-btn" onclick="showSadPage()">Maybe Later...</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sad Page (Easter Egg) -->
+        <div class="sad-page hidden" id="sadPage">
+            <div class="sad-box">
+                <div class="sad-emoji">🥺</div>
+                <h1>Oh no...</h1>
+                <p class="suspense-text">
+                    But it was made just for you!<br>
+                    Are you sure you don't want to see it?
+                </p>
+                <button class="retry-btn" onclick="goBack()">Okay, I'll Look 💜</button>
+            </div>
+        </div>
+
+        <!-- Second Page (Letter) -->
+        <div class="second-page" id="secondPage">
+            <div class="letter-box">
+                <div class="flower-decoration flower-top-left">🌺</div>
+                <div class="flower-decoration flower-top-right">🪻</div>
+                <div class="flower-decoration flower-bottom-left">🌸</div>
+                <div class="flower-decoration flower-bottom-right">🌷</div>
+                <div class="letter-header">
+                    <div class="sparkle">✨💜✨</div>
+                    <h2>For Someone Special</h2>
+                </div>
+                
+                <div class="letter-content">
+                    <p>Hey,</p>
+                    
+                    <p>I know this might seem a little unusual, getting a message through an NFC card, but I wanted to do something different—something that shows I've been paying attention.</p>
+                    
+                    <p>I've noticed how <span class="highlight">purple seems to light up around you</span>, like it's your signature color. And I've noticed other things too... the way you smile, the little things that make you, <em>you</em>.</p>
+                    
+                    <p>This Valentine's Day, I wanted to let you know that you've been on my mind. I might not have all the fancy gifts or perfect words, but what I do have is <span class="highlight">genuine admiration</span> for the person you are.</p>
+                    
+                    <p>Whether this becomes something more or just a sweet memory, I'm glad I took the chance to tell you.</p>
+                    
+                    <p>Happy Valentine's Day. 💜</p>
+                </div>
+
+                <div class="signature">
+                    ~ Someone who thinks you're pretty amazing
+                </div>
+
+                <div class="easter-egg">
+                    <p class="easter-egg-text">P.S. You found the secret message! 🎉</p>
+                    <div class="secret-message">
+                        "They say purple represents mystery and magic...<br>
+                        and you're definitely both of those things to me. ✨"
+                    </div>
+                </div>
+
+                <div class="response-section" id="responseSection">
+                    <div class="response-title">Send a Message Back 💌</div>
+                    <p class="response-subtitle">What do you think? I'd love to hear from you...</p>
+                    <form id="responseForm" action="https://formspree.io/f/xeelaeee" method="POST">
+                        <textarea 
+                            class="response-textarea" 
+                            name="message"
+                            id="responseMessage" 
+                            placeholder="Type your thoughts here... 💭"
+                            maxlength="500"
+                            required
+                        ></textarea>
+                        <input type="hidden" name="_subject" value="💜 Valentine's Response Received!">
+                        <input type="hidden" name="_next" value="#sent">
+                        <button type="submit" class="send-btn">
+                            Send Your Response ✨
+                        </button>
+                    </form>
+                </div>
+
+                <div class="response-sent hidden" id="responseSent">
+                    <div class="response-sent-icon">💜</div>
+                    <p>Your message has been sent!<br>Thank you for reading 💜</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Array of floating icons
+        const floatingIcons = ['💜', '🪻', '🌸', '💐', '🌷', '🌺', '✨', '💕', '🦋'];
+        
+        // Create floating icons
+        function createFloatingIcon() {
+            const icon = document.createElement('div');
+            icon.classList.add('heart');
+            icon.innerHTML = floatingIcons[Math.floor(Math.random() * floatingIcons.length)];
+            icon.style.left = Math.random() * 100 + 'vw';
+            icon.style.animationDelay = Math.random() * 5 + 's';
+            document.body.appendChild(icon);
+            
+            setTimeout(() => {
+                icon.remove();
+            }, 6000);
+        }
+
+        // Create icons periodically
+        setInterval(createFloatingIcon, 800);
+
+        function unlockMessage() {
+            document.getElementById('firstPage').style.display = 'none';
+            document.getElementById('sadPage').classList.add('hidden');
+            document.getElementById('secondPage').style.display = 'block';
+            
+            // Confetti effect with varied icons
+            for(let i = 0; i < 50; i++) {
+                setTimeout(createFloatingIcon, i * 50);
+            }
+        }
+
+        function showSadPage() {
+            document.getElementById('firstPage').style.display = 'none';
+            document.getElementById('sadPage').classList.remove('hidden');
+        }
+
+        function goBack() {
+            unlockMessage();
+        }
+
+        // Handle form submission
+        const form = document.getElementById('responseForm');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                // Show celebration effect
+                for(let i = 0; i < 30; i++) {
+                    setTimeout(createFloatingIcon, i * 50);
+                }
+                
+                // After form submits successfully, show confirmation
+                setTimeout(() => {
+                    document.getElementById('responseSection').classList.add('hidden');
+                    document.getElementById('responseSent').classList.remove('hidden');
+                }, 1000);
+            });
+        }
+
+        // Check URL hash for successful submission
+        if (window.location.hash === '#sent') {
+            setTimeout(() => {
+                unlockMessage();
+                document.getElementById('responseSection').classList.add('hidden');
+                document.getElementById('responseSent').classList.remove('hidden');
+            }, 500);
+        }
+    </script>
+</body>
+</html>
