@@ -1,593 +1,1248 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For You... 💜</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>For You, Always</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #ffeef8 0%, #f5e6ff 25%, #e6d5f5 50%, #d5c5eb 75%, #ffd6e8 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow-x: hidden;
-        }
+:root{
+  --bg:#faf8ff;
+  --surface:#f2eaff;
+  --surface2:#e8deff;
+  --border:#cdb4f5;
+  --lav:#b39ddb;
+  --violet:#9575cd;
+  --deep:#6a3fa3;
+  --ink:#1a0833;
+  --muted:#7b6894;
+  --white:#fff;
+}
 
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Nunito',sans-serif;font-weight:300;overflow-x:hidden;min-height:100vh}
 
-        .container {
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-            position: relative;
-        }
+/* ── particles ── */
+#particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.petal{position:absolute;border-radius:50% 10% 50% 10%;opacity:0;animation:floatUp linear infinite}
+@keyframes floatUp{
+  0%  {transform:translateY(110vh) rotate(0deg) scale(.5);opacity:0}
+  10% {opacity:.3}
+  90% {opacity:.12}
+  100%{transform:translateY(-5vh) rotate(480deg) scale(1.3);opacity:0}
+}
 
-        /* Floating hearts animation */
-        .heart {
-            position: fixed;
-            font-size: 24px;
-            opacity: 0;
-            animation: float 6s ease-in infinite;
-        }
+/* ── envelope ── */
+#env-section{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;z-index:1;padding:2rem;text-align:center}
+.for-label{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:var(--muted);letter-spacing:.1em;margin-bottom:3rem;opacity:0;animation:fadeUp 1s .4s ease forwards}
+.env-wrap{width:280px;cursor:pointer;opacity:0;animation:fadeUp 1s .7s ease forwards}
+.env-wrap:hover .env-body{transform:translateY(-6px)}
+.env-wrap:hover .env-shad{opacity:.25;transform:scale(.92) translateY(4px)}
+.env-body{width:280px;height:190px;background:var(--surface);border:1.5px solid var(--border);border-radius:4px 4px 14px 14px;position:relative;transition:transform .3s ease;overflow:hidden}
+.env-body::after{content:'';position:absolute;bottom:0;left:0;right:0;height:100px;background:linear-gradient(135deg,var(--bg) 50%,transparent 50%),linear-gradient(-135deg,var(--bg) 50%,transparent 50%);background-size:50% 100%;background-position:left bottom,right bottom;background-repeat:no-repeat;border-top:1.5px solid var(--border)}
+.env-flap{width:0;height:0;border-left:140px solid transparent;border-right:140px solid transparent;border-top:100px solid var(--surface);position:absolute;top:-1px;filter:drop-shadow(0 1.5px 0 var(--border));transform-origin:top center;transition:transform .6s cubic-bezier(.4,0,.2,1);z-index:1}
+.env-wrap.open .env-flap{transform:rotateX(180deg)}
+.env-wax{position:absolute;top:52%;left:50%;transform:translate(-50%,-50%);width:38px;height:38px;background:var(--violet);border-radius:50%;border:2px solid var(--deep);display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;z-index:2}
+.env-shad{width:200px;height:10px;background:var(--lav);border-radius:50%;margin:6px auto 0;filter:blur(8px);opacity:.4;transition:opacity .3s,transform .3s}
+.open-hint{margin-top:2.5rem;font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;color:var(--lav);opacity:0;animation:fadeUp 1s 1.2s ease forwards,pulse 2.5s 2.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
 
-        @keyframes float {
-            0% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.8;
-            }
-            90% {
-                opacity: 0.8;
-            }
-            100% {
-                transform: translateY(-100vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
+/* ── main ── */
+#main{display:none;position:relative;z-index:1}
+#main.visible{display:block}
 
-        /* First Page Styles */
-        .first-page {
-            animation: fadeIn 1s ease-in;
-        }
+/* ── page header ── */
+.pg-header{text-align:center;padding:5rem 2rem 3rem}
+.pg-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,6vw,4rem);font-weight:300;line-height:1.15;color:var(--ink)}
+.pg-title em{font-style:italic;color:var(--deep)}
+.pg-sub{margin-top:1rem;font-size:.9rem;color:var(--muted);font-style:italic}
+.divider{width:50px;height:1px;background:var(--border);margin:2rem auto}
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
+/* ── mood section ── */
+#mood-section{max-width:840px;margin:0 auto;padding:0 1.5rem 4rem}
+.mood-prompt{text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.3rem,3vw,1.7rem);color:var(--deep);margin-bottom:2.5rem}
+#mood-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.mood-card{background:var(--surface);border:1.5px solid var(--border);border-radius:18px;padding:1.6rem 1rem;text-align:center;cursor:pointer;transition:transform .25s ease,box-shadow .25s ease,background .25s ease;position:relative;overflow:hidden}
+.mood-card:hover{transform:translateY(-5px);box-shadow:0 14px 32px rgba(106,63,163,.18);background:var(--mood-hover,var(--surface2))}
+.mood-emoji{font-size:2rem;display:block;margin-bottom:.5rem}
+.mood-name{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--deep);display:block}
+.mood-desc{font-size:.74rem;color:var(--muted);margin-top:.3rem;display:block;font-style:italic}
 
-        .mystery-box {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 30px;
-            padding: 60px 40px;
-            box-shadow: 0 20px 60px rgba(139, 69, 139, 0.3);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(216, 191, 216, 0.5);
-            position: relative;
-            overflow: visible;
-        }
+/* ── letter panels ── */
+.letter-panel{display:none;animation:fadeUp .5s ease forwards}
+.letter-panel.active{display:block}
+.back-btn{background:none;border:1px solid var(--border);border-radius:20px;padding:.5rem 1.2rem;font-family:'Nunito',sans-serif;font-size:.8rem;color:var(--muted);cursor:pointer;transition:all .2s;letter-spacing:.05em;margin-bottom:2.5rem;display:inline-flex;align-items:center;gap:.4rem}
+.back-btn:hover{background:var(--surface);color:var(--deep);border-color:var(--violet)}
+.ltr-mood-header{text-align:center;margin-bottom:3rem}
+.ltr-mood-emoji{font-size:2.5rem;display:block;margin-bottom:.8rem}
+.ltr-mood-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,4vw,2.5rem);font-weight:300;color:var(--ink)}
+.ltr-mood-title em{font-style:italic;color:var(--deep)}
 
-        .flower-decoration {
-            position: absolute;
-            font-size: 35px;
-            opacity: 0.6;
-            animation: sway 3s ease-in-out infinite;
-        }
+/* letter card */
+.ltr-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:2.5rem 3rem;margin-bottom:2rem;position:relative}
+.ltr-card::before{content:'\201C';font-family:'Cormorant Garamond',serif;font-size:7rem;color:var(--border);position:absolute;top:-1.2rem;left:1.5rem;line-height:1;pointer-events:none}
+.ltr-text{font-family:'Cormorant Garamond',serif;font-size:clamp(1.05rem,2vw,1.2rem);line-height:1.9;color:var(--ink)}
+.ltr-text p+p{margin-top:1rem}
+.ltr-sign{margin-top:2rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:var(--deep);text-align:right}
 
-        .flower-top-left {
-            top: -15px;
-            left: -15px;
-            animation-delay: 0s;
-        }
+/* pull quote */
+.pull-quote{border-left:2px solid var(--violet);padding:1rem 1.5rem;margin:2rem 0;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;color:var(--deep);line-height:1.6}
 
-        .flower-top-right {
-            top: -15px;
-            right: -15px;
-            animation-delay: 1s;
-        }
+/* extra card */
+.extra-card{border-radius:14px;padding:1.8rem 2rem;margin-bottom:2rem}
+.extra-title{font-size:.68rem;letter-spacing:.25em;text-transform:uppercase;color:var(--deep);margin-bottom:1.2rem;display:block}
+.suggestion-list{list-style:none;display:flex;flex-direction:column;gap:.7rem}
+.suggestion-list li{display:flex;align-items:flex-start;gap:.8rem;font-size:.9rem;color:var(--ink);line-height:1.5}
+.suggestion-list li::before{content:'✦';color:var(--violet);font-size:.7rem;margin-top:3px;flex-shrink:0}
 
-        .flower-bottom-left {
-            bottom: -15px;
-            left: -15px;
-            animation-delay: 2s;
-        }
+/* ── breathing ── */
+.breath-box{display:flex;flex-direction:column;align-items:center;padding:2.5rem 2rem;background:var(--surface);border:1px solid var(--border);border-radius:18px;margin-bottom:2rem;text-align:center}
+.breath-ring{width:110px;height:110px;border-radius:50%;background:var(--surface2);border:2px solid var(--lav);display:flex;align-items:center;justify-content:center;margin:1.5rem 0;position:relative;transition:transform .1s}
+.breath-ring.inhale{animation:bInhale 4s ease-in-out forwards}
+.breath-ring.hold{animation:bHold 7s linear forwards}
+.breath-ring.exhale{animation:bExhale 8s ease-in-out forwards}
+@keyframes bInhale{from{transform:scale(1);border-color:var(--lav)}to{transform:scale(1.65);border-color:var(--violet)}}
+@keyframes bHold{from{transform:scale(1.65);border-color:var(--violet)}to{transform:scale(1.65);border-color:var(--violet)}}
+@keyframes bExhale{from{transform:scale(1.65);border-color:var(--violet)}to{transform:scale(1);border-color:var(--lav)}}
+.breath-num{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--violet);min-height:2.5rem}
+.breath-label{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--muted);min-height:1.4em}
+.breath-btn{background:var(--violet);color:#fff;border:none;border-radius:20px;padding:.6rem 1.8rem;font-family:'Nunito',sans-serif;font-size:.85rem;cursor:pointer;transition:background .2s;margin-top:1.2rem}
+.breath-btn:hover{background:var(--deep)}
 
-        .flower-bottom-right {
-            bottom: -15px;
-            right: -15px;
-            animation-delay: 1.5s;
-        }
+/* ── always-here ── */
+#always-here{background:var(--surface);border-top:1px solid var(--border);padding:5rem 1.5rem 8rem}
+.always-inner{max-width:760px;margin:0 auto}
+.always-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,4vw,2.5rem);font-weight:300;text-align:center;color:var(--ink);margin-bottom:.5rem}
+.always-title em{font-style:italic;color:var(--deep)}
+.always-sub{text-align:center;font-size:.85rem;color:var(--muted);margin-bottom:4rem;font-style:italic}
+.sec-label{font-size:.68rem;letter-spacing:.25em;text-transform:uppercase;color:var(--lav);margin-bottom:1.2rem;display:block}
+.sec-block{margin-bottom:4rem}
 
-        @keyframes sway {
-            0%, 100% { transform: rotate(-10deg); }
-            50% { transform: rotate(10deg); }
-        }
+/* affirmation */
+.aff-card{background:var(--white);border:1px solid var(--border);border-radius:18px;padding:2.2rem 2.5rem;text-align:center}
+.aff-text{font-family:'Cormorant Garamond',serif;font-size:clamp(1.15rem,3vw,1.55rem);font-style:italic;color:var(--ink);line-height:1.55}
+.aff-sub{margin-top:.8rem;font-size:.72rem;color:var(--lav);letter-spacing:.1em}
 
-        .lock-icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-            animation: pulse 2s ease-in-out infinite;
-            filter: drop-shadow(0 4px 8px rgba(139, 69, 139, 0.3));
-        }
+/* hug */
+.hug-area{display:flex;flex-direction:column;align-items:center;gap:1rem;position:relative;padding:1rem 0}
+.hug-btn{background:var(--surface2);border:1.5px solid var(--border);border-radius:50px;padding:1rem 2.5rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.2rem;color:var(--deep);cursor:pointer;transition:all .2s}
+.hug-btn:hover{background:var(--border);transform:scale(1.04)}
+.hug-btn:active{transform:scale(.97)}
+.hug-count{font-size:.8rem;color:var(--muted);font-style:italic;min-height:1.2em}
+.heart-p{position:absolute;pointer-events:none;font-size:1.2rem;animation:heartFloat 1.3s ease forwards;z-index:10}
+@keyframes heartFloat{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-90px) scale(1.6)}}
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1) rotate(-5deg); }
-            50% { transform: scale(1.1) rotate(5deg); }
-        }
+/* QR */
+.qr-area{background:var(--white);border:1px solid var(--border);border-radius:18px;padding:2rem;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.input-row{display:flex;width:100%;max-width:520px;gap:8px}
+.text-input{flex:1;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:10px;font-family:'Nunito',sans-serif;font-size:.85rem;color:var(--ink);background:var(--surface);outline:none;transition:border-color .2s}
+.text-input:focus{border-color:var(--violet)}
+.text-input::placeholder{color:var(--lav)}
+.gen-btn{background:var(--violet);color:#fff;border:none;border-radius:10px;padding:.7rem 1.2rem;font-family:'Nunito',sans-serif;font-size:.85rem;cursor:pointer;transition:background .2s;white-space:nowrap}
+.gen-btn:hover{background:var(--deep)}
+#qr-out{display:none;flex-direction:column;align-items:center;gap:.8rem}
+#qr-out.on{display:flex}
+#qr-canvas{border-radius:10px}
+.qr-hint{font-size:.76rem;color:var(--muted);font-style:italic;text-align:center}
 
-        h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5em;
-            color: #8b5a8b;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(139, 90, 139, 0.2);
-        }
+/* spotify */
+.spot-area{background:var(--white);border:1px solid var(--border);border-radius:18px;padding:1.5rem;display:flex;flex-direction:column;gap:1rem}
+.spot-iframe{border-radius:12px;overflow:hidden}
 
-        .suspense-text {
-            font-size: 1.1em;
-            color: #9370a8;
-            margin-bottom: 40px;
-            line-height: 1.6;
-            font-weight: 300;
-        }
+/* good day */
+.day-counter{background:var(--white);border:1px solid var(--border);border-radius:18px;padding:2rem;display:flex;flex-direction:column;align-items:center;gap:.9rem;text-align:center}
+.day-num{font-family:'Cormorant Garamond',serif;font-size:4.5rem;font-weight:300;color:var(--deep);line-height:1}
+.day-label{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.day-btn{background:var(--surface2);border:1.5px solid var(--border);border-radius:20px;padding:.6rem 1.5rem;font-family:'Nunito',sans-serif;font-size:.85rem;color:var(--deep);cursor:pointer;transition:all .2s}
+.day-btn:hover{background:var(--violet);color:#fff;border-color:var(--violet)}
+.day-btn:disabled{opacity:.5;cursor:default;background:var(--surface);color:var(--muted)}
+.day-hint{font-size:.74rem;color:var(--lav);font-style:italic}
 
-        .button-container {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
+/* memory */
+.mem-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.mem-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.2rem 1.4rem;transition:transform .25s ease}
+.mem-card:hover{transform:translateY(-3px)}
+.mem-date{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--lav);display:block;margin-bottom:.4rem}
+.mem-text{font-family:'Cormorant Garamond',serif;font-size:1rem;line-height:1.6;color:var(--ink)}
 
-        .choice-btn {
-            padding: 15px 40px;
-            font-size: 1.1em;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(139, 69, 139, 0.3);
-        }
+/* photos */
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.photo-slot{background:var(--surface2);border:1px solid var(--border);border-radius:10px;aspect-ratio:1;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer}
+.photo-slot.tall{grid-row:span 2;aspect-ratio:unset}
+.photo-slot img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+.photo-slot:hover img{transform:scale(1.05)}
+.ph-placeholder{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--lav);font-size:.82rem;text-align:center;padding:1rem}
 
-        .yes-btn {
-            background: linear-gradient(135deg, #c8a8e9 0%, #b088d6 100%);
-            color: white;
-        }
+/* songs */
+.song-list{list-style:none;background:var(--white);border:1px solid var(--border);border-radius:18px;overflow:hidden}
+.song-item{display:flex;align-items:center;gap:1rem;padding:1rem 1.4rem;border-bottom:1px solid var(--surface);transition:background .2s}
+.song-item:last-child{border-bottom:none}
+.song-item:hover{background:var(--surface)}
+.song-num{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--lav);min-width:22px;text-align:right}
+.song-info{flex:1}
+.song-title{font-size:.9rem;font-weight:500;color:var(--ink)}
+.song-reason{font-size:.76rem;color:var(--muted);font-style:italic;margin-top:2px}
 
-        .yes-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(139, 69, 139, 0.4);
-        }
+/* closing */
+.closing{text-align:center;padding:4rem 2rem 2rem}
+.closing-quote{font-family:'Cormorant Garamond',serif;font-size:clamp(1.2rem,3vw,1.7rem);font-style:italic;color:var(--deep);line-height:1.5;max-width:480px;margin:0 auto 1.5rem}
+.closing-name{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--lav)}
 
-        .no-btn {
-            background: white;
-            color: #9370a8;
-            border: 2px solid #c8a8e9;
-        }
+/* ── love randomiser ── */
+.love-card{background:var(--white);border:1px solid var(--border);border-radius:18px;padding:2rem 2.2rem;display:flex;flex-direction:column;align-items:center;gap:1.4rem;text-align:center}
+.love-display{min-height:90px;display:flex;align-items:center;justify-content:center;padding:.5rem 1rem;width:100%}
+.love-text{font-family:'Cormorant Garamond',serif;font-size:clamp(1.05rem,2.5vw,1.25rem);font-style:italic;color:var(--ink);line-height:1.7;transition:opacity .35s ease}
+.love-text.fade{opacity:0}
+.love-btn{background:var(--violet);color:#fff;border:none;border-radius:20px;padding:.65rem 2rem;font-family:'Nunito',sans-serif;font-size:.85rem;cursor:pointer;transition:background .2s}
+.love-btn:hover{background:var(--deep)}
+.love-counter{font-size:.72rem;color:var(--lav);font-style:italic;min-height:1em}
 
-        .no-btn:hover {
-            background: #f5e6ff;
-            transform: translateY(-3px);
-        }
+/* ── ambient sounds ── */
+.ambient-card{background:var(--white);border:1px solid var(--border);border-radius:18px;padding:2rem 2.2rem;display:flex;flex-direction:column;gap:1.3rem}
+.ambient-intro{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--muted);text-align:center}
+.ambient-grid{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.amb-btn{background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:.6rem 1.4rem;font-family:'Nunito',sans-serif;font-size:.84rem;color:var(--deep);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.4rem}
+.amb-btn:hover{background:var(--surface2);border-color:var(--violet)}
+.amb-btn.active{background:var(--violet);color:#fff;border-color:var(--violet)}
+.amb-vol-row{display:flex;align-items:center;gap:1rem;padding:0 .5rem}
+.amb-vol-label{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--lav);white-space:nowrap}
+.amb-vol{flex:1;accent-color:var(--violet);cursor:pointer}
+.amb-now{font-size:.74rem;color:var(--lav);font-style:italic;text-align:center;margin:0;min-height:1em}
 
-        /* Second Page Styles */
-        .second-page {
-            display: none;
-            animation: slideIn 0.8s ease-out;
-        }
+/* ── sealed letter ── */
+.sealed-card{background:var(--white);border:1px solid var(--border);border-radius:18px;overflow:hidden}
+.sealed-locked-inner{display:flex;flex-direction:column;align-items:center;padding:3rem 2rem;gap:.9rem;text-align:center}
+.sealed-wax{font-size:2.8rem;margin-bottom:.3rem;filter:grayscale(.2)}
+.sealed-date-label{font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--lav)}
+.sealed-date-val{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;color:var(--deep)}
+.sealed-countdown{font-size:.78rem;color:var(--muted);font-style:italic}
+.sealed-hint{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.95rem;color:var(--muted);line-height:1.6;max-width:340px}
+.cal-btn{background:none;border:1.5px solid var(--border);border-radius:20px;padding:.55rem 1.4rem;font-family:'Nunito',sans-serif;font-size:.8rem;color:var(--deep);cursor:pointer;transition:all .2s;margin-top:.4rem}
+.cal-btn:hover{background:var(--surface);border-color:var(--violet)}
+.cal-options{display:none;flex-direction:column;gap:.5rem;align-items:center;margin-top:.2rem}
+.cal-options.show{display:flex}
+.cal-opt{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.5rem 1.3rem;font-size:.78rem;color:var(--deep);cursor:pointer;font-family:'Nunito',sans-serif;transition:background .2s;width:200px;text-align:center}
+.cal-opt:hover{background:var(--surface2)}
+.sealed-open-inner{padding:2.5rem 3rem}
+.sealed-ribbon{display:flex;align-items:center;gap:.8rem;justify-content:center;margin-bottom:2rem}
+.sealed-ribbon-line{flex:1;height:1px;background:var(--border)}
+.sealed-ribbon-text{font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--lav)}
 
-        @keyframes slideIn {
-            from { 
-                opacity: 0; 
-                transform: translateY(50px);
-            }
-            to { 
-                opacity: 1; 
-                transform: translateY(0);
-            }
-        }
+/* notes form */
+.notes-form-card{background:var(--white);border:1px solid var(--border);border-radius:18px;padding:2rem 2.2rem;display:flex;flex-direction:column;gap:1.1rem}
+.notes-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:var(--muted);text-align:center;line-height:1.5}
+.notes-form{display:flex;flex-direction:column;gap:.9rem}
+.notes-textarea{width:100%;padding:.9rem 1.1rem;border:1.5px solid var(--border);border-radius:12px;font-family:'Nunito',sans-serif;font-size:.88rem;color:var(--ink);background:var(--surface);outline:none;resize:vertical;transition:border-color .2s;line-height:1.6}
+.notes-textarea:focus{border-color:var(--violet)}
+.notes-textarea::placeholder{color:var(--lav)}
+.notes-btn{background:var(--violet);color:#fff;border:none;border-radius:20px;padding:.65rem 2rem;font-family:'Nunito',sans-serif;font-size:.85rem;cursor:pointer;transition:background .2s;align-self:flex-end}
+.notes-btn:hover{background:var(--deep)}
+.notes-success{display:none;flex-direction:column;align-items:center;gap:.7rem;padding:1rem 0;text-align:center}
+.notes-success.show{display:flex}
+.notes-success-icon{font-size:2rem}
+.notes-success-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:var(--deep)}
+.notes-again-btn{background:none;border:1px solid var(--border);border-radius:16px;padding:.45rem 1.2rem;font-family:'Nunito',sans-serif;font-size:.78rem;color:var(--muted);cursor:pointer;transition:all .2s;margin-top:.2rem}
+.notes-again-btn:hover{background:var(--surface);color:var(--deep);border-color:var(--violet)}
+.notes-hint{font-size:.74rem;color:var(--lav);font-style:italic;text-align:center;min-height:1em}
 
-        .letter-box {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 30px;
-            padding: 50px 40px;
-            box-shadow: 0 20px 60px rgba(139, 69, 139, 0.3);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(216, 191, 216, 0.5);
-            text-align: left;
-            position: relative;
-            overflow: visible;
-        }
+/* utils */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .65s ease,transform .65s ease}
+.reveal.in{opacity:1;transform:none}
 
-        .letter-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .letter-header h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.2em;
-            color: #8b5a8b;
-            margin-bottom: 10px;
-        }
-
-        .sparkle {
-            font-size: 30px;
-            animation: sparkle 1.5s ease-in-out infinite;
-        }
-
-        @keyframes sparkle {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.2); }
-        }
-
-        .letter-content {
-            font-size: 1.05em;
-            color: #6b4c6b;
-            line-height: 1.8;
-            margin-bottom: 30px;
-        }
-
-        .letter-content p {
-            margin-bottom: 20px;
-        }
-
-        .highlight {
-            color: #9370a8;
-            font-weight: 500;
-        }
-
-        .signature {
-            text-align: right;
-            font-family: 'Playfair Display', serif;
-            font-size: 1.3em;
-            color: #8b5a8b;
-            margin-top: 30px;
-            font-style: italic;
-        }
-
-        .easter-egg {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 30px;
-            border-top: 2px dashed #d8bfd8;
-        }
-
-        .easter-egg-text {
-            font-size: 0.9em;
-            color: #9370a8;
-            margin-bottom: 15px;
-        }
-
-        .secret-message {
-            background: linear-gradient(135deg, #f5e6ff 0%, #e6d5f5 100%);
-            padding: 20px;
-            border-radius: 15px;
-            font-family: 'Playfair Display', serif;
-            color: #8b5a8b;
-            font-size: 1.1em;
-            box-shadow: inset 0 2px 10px rgba(139, 69, 139, 0.2);
-        }
-
-        /* No button easter egg */
-        .hidden {
-            display: none;
-        }
-
-        .sad-page {
-            animation: fadeIn 0.8s ease-in;
-        }
-
-        .sad-box {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 30px;
-            padding: 60px 40px;
-            box-shadow: 0 20px 60px rgba(139, 69, 139, 0.3);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(216, 191, 216, 0.5);
-        }
-
-        .sad-emoji {
-            font-size: 80px;
-            margin-bottom: 20px;
-        }
-
-        .retry-btn {
-            margin-top: 30px;
-            padding: 15px 40px;
-            font-size: 1.1em;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 500;
-            background: linear-gradient(135deg, #c8a8e9 0%, #b088d6 100%);
-            color: white;
-            box-shadow: 0 5px 15px rgba(139, 69, 139, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .retry-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(139, 69, 139, 0.4);
-        }
-
-        /* Response Box Styles */
-        .response-section {
-            margin-top: 40px;
-            padding: 30px;
-            background: linear-gradient(135deg, #ffeef8 0%, #f5e6ff 100%);
-            border-radius: 20px;
-            border: 2px dashed #c8a8e9;
-        }
-
-        .response-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.4em;
-            color: #8b5a8b;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .response-subtitle {
-            font-size: 0.9em;
-            color: #9370a8;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .response-textarea {
-            width: 100%;
-            min-height: 120px;
-            padding: 15px;
-            border: 2px solid #d8bfd8;
-            border-radius: 15px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 1em;
-            color: #6b4c6b;
-            resize: vertical;
-            background: white;
-            transition: all 0.3s ease;
-        }
-
-        .response-textarea:focus {
-            outline: none;
-            border-color: #b088d6;
-            box-shadow: 0 0 15px rgba(176, 136, 214, 0.3);
-        }
-
-        .response-textarea::placeholder {
-            color: #c8a8e9;
-        }
-
-        .send-btn {
-            margin-top: 15px;
-            width: 100%;
-            padding: 15px;
-            font-size: 1.1em;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 500;
-            background: linear-gradient(135deg, #c8a8e9 0%, #b088d6 100%);
-            color: white;
-            box-shadow: 0 5px 15px rgba(139, 69, 139, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .send-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(139, 69, 139, 0.4);
-        }
-
-        .send-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .response-sent {
-            text-align: center;
-            padding: 30px;
-            color: #8b5a8b;
-            font-family: 'Playfair Display', serif;
-            font-size: 1.2em;
-        }
-
-        .response-sent-icon {
-            font-size: 60px;
-            margin-bottom: 15px;
-        }
-    </style>
+/* responsive */
+@media(max-width:560px){
+  #mood-grid{grid-template-columns:repeat(2,1fr)}
+  .ltr-card{padding:2rem 1.5rem}
+  .photo-grid{grid-template-columns:repeat(2,1fr)}
+  .photo-slot.tall{grid-row:span 1;aspect-ratio:1}
+  .input-row{flex-direction:column}
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <!-- First Page -->
-        <div class="first-page" id="firstPage">
-            <div class="mystery-box">
-                <div class="flower-decoration flower-top-left">🪻</div>
-                <div class="flower-decoration flower-top-right">🌸</div>
-                <div class="flower-decoration flower-bottom-left">💐</div>
-                <div class="flower-decoration flower-bottom-right">🪻</div>
-                <div class="lock-icon">🎁</div>
-                <h1>A Message Awaits...</h1>
-                <p class="suspense-text">
-                    Something special has been prepared for you.<br>
-                    But the question is...<br>
-                    <strong>Are you ready to unlock it?</strong>
-                </p>
-                <div class="button-container">
-                    <button class="choice-btn yes-btn" onclick="unlockMessage()">Yes, I'm Ready 💜</button>
-                    <button class="choice-btn no-btn" onclick="showSadPage()">Maybe Later...</button>
-                </div>
-            </div>
+
+<div id="particles"></div>
+
+<!-- ══════════════════════════════
+     ENVELOPE LANDING
+══════════════════════════════ -->
+<div id="env-section">
+  <p class="for-label">a little something, just for you</p>
+  <div class="env-wrap" id="envelope" onclick="openEnvelope()">
+    <div class="env-body">
+      <div class="env-flap"></div>
+      <div class="env-wax">✦</div>
+    </div>
+    <div class="env-shad"></div>
+  </div>
+  <p class="open-hint">tap to open</p>
+</div>
+
+<!-- ══════════════════════════════
+     MAIN
+══════════════════════════════ -->
+<div id="main">
+
+  <!-- Header -->
+  <header class="pg-header reveal">
+    <h1 class="pg-title">for <em>Charity</em>,<br>always</h1>
+    <div class="divider"></div>
+    <p class="pg-sub">however you're feeling right now — there's something here for that</p>
+  </header>
+
+  <!-- ── MOOD SECTION ── -->
+  <div id="mood-section">
+
+    <!-- Mood picker -->
+    <div id="mood-picker">
+      <p class="mood-prompt reveal">how are you feeling right now?</p>
+      <div id="mood-grid">
+
+        <div class="mood-card" style="--mood-hover:#e8eeff" onclick="openMood('sad')">
+          <span class="mood-emoji">😔</span>
+          <span class="mood-name">sad</span>
+          <span class="mood-desc">when the weight feels heavy</span>
         </div>
 
-        <!-- Sad Page (Easter Egg) -->
-        <div class="sad-page hidden" id="sadPage">
-            <div class="sad-box">
-                <div class="sad-emoji">🥺</div>
-                <h1>Oh no...</h1>
-                <p class="suspense-text">
-                    But it was made just for you!<br>
-                    Are you sure you don't want to see it?
-                </p>
-                <button class="retry-btn" onclick="goBack()">Okay, I'll Look 💜</button>
-            </div>
+        <div class="mood-card" style="--mood-hover:#ede5ff" onclick="openMood('tired')">
+          <span class="mood-emoji">🌙</span>
+          <span class="mood-name">tired</span>
+          <span class="mood-desc">when you have nothing left</span>
         </div>
 
-        <!-- Second Page (Letter) -->
-        <div class="second-page" id="secondPage">
-            <div class="letter-box">
-                <div class="flower-decoration flower-top-left">🌺</div>
-                <div class="flower-decoration flower-top-right">🪻</div>
-                <div class="flower-decoration flower-bottom-left">🌸</div>
-                <div class="flower-decoration flower-bottom-right">🌷</div>
-                <div class="letter-header">
-                    <div class="sparkle">✨💜✨</div>
-                    <h2>For Someone Special</h2>
-                </div>
-                
-                <div class="letter-content">
-                    <p>Hey,</p>
-                    
-                    <p>I know this might seem a little unusual, getting a message through an NFC card, but I wanted to do something different—something that shows I've been paying attention.</p>
-                    
-                    <p>I've noticed how <span class="highlight">purple seems to light up around you</span>, like it's your signature color. And I've noticed other things too... the way you smile, the little things that make you, <em>you</em>.</p>
-                    
-                    <p>This Valentine's Day, I wanted to let you know that you've been on my mind. I might not have all the fancy gifts or perfect words, but what I do have is <span class="highlight">genuine admiration</span> for the person you are.</p>
-                    
-                    <p>Whether this becomes something more or just a sweet memory, I'm glad I took the chance to tell you.</p>
-                    
-                    <p>Happy Valentine's Day. 💜</p>
-                </div>
-
-                <div class="signature">
-                    ~ Someone who thinks you're pretty amazing
-                </div>
-
-                <div class="easter-egg">
-                    <p class="easter-egg-text">P.S. You found the secret message! 🎉</p>
-                    <div class="secret-message">
-                        "They say purple represents mystery and magic...<br>
-                        and you're definitely both of those things to me. ✨"
-                    </div>
-                </div>
-
-                <div class="response-section" id="responseSection">
-                    <div class="response-title">Send a Message Back 💌</div>
-                    <p class="response-subtitle">What do you think? I'd love to hear from you...</p>
-                    <form id="responseForm" action="https://formspree.io/f/xeelaeee" method="POST">
-                        <textarea 
-                            class="response-textarea" 
-                            name="message"
-                            id="responseMessage" 
-                            placeholder="Type your thoughts here... 💭"
-                            maxlength="500"
-                            required
-                        ></textarea>
-                        <input type="hidden" name="_subject" value="💜 Valentine's Response Received!">
-                        <input type="hidden" name="_next" value="#sent">
-                        <button type="submit" class="send-btn">
-                            Send Your Response ✨
-                        </button>
-                    </form>
-                </div>
-
-                <div class="response-sent hidden" id="responseSent">
-                    <div class="response-sent-icon">💜</div>
-                    <p>Your message has been sent!<br>Thank you for reading 💜</p>
-                </div>
-            </div>
+        <div class="mood-card" style="--mood-hover:#ffeaf0" onclick="openMood('angry')">
+          <span class="mood-emoji">🔥</span>
+          <span class="mood-name">frustrated</span>
+          <span class="mood-desc">when everything is too much</span>
         </div>
+
+        <div class="mood-card" style="--mood-hover:#fffce8" onclick="openMood('happy')">
+          <span class="mood-emoji">✨</span>
+          <span class="mood-name">happy</span>
+          <span class="mood-desc">when everything feels good</span>
+        </div>
+
+        <div class="mood-card" style="--mood-hover:#e8fff8" onclick="openMood('anxious')">
+          <span class="mood-emoji">🌀</span>
+          <span class="mood-name">anxious</span>
+          <span class="mood-desc">when your mind won't stop</span>
+        </div>
+
+        <div class="mood-card" style="--mood-hover:#fce8ff" onclick="openMood('missing')">
+          <span class="mood-emoji">😁</span>
+          <span class="mood-name">optimistic</span>
+          <span class="mood-desc">when you want to believe in better days</span>
+        </div>
+
+      </div>
+    </div><!-- end mood-picker -->
+
+    <!-- ── LETTER: SAD ── -->
+    <div class="letter-panel" id="panel-sad">
+      <button class="back-btn" onclick="backToMoods()">← back to feelings</button>
+      <div class="ltr-mood-header">
+        <span class="ltr-mood-emoji">💜</span>
+        <h2 class="ltr-mood-title">when you're <em>sad</em></h2>
+      </div>
+      <div class="ltr-card">
+        <div class="ltr-text">
+          <p>Hey. I know the world feels heavy right now, and I'm not going to tell you to cheer up or look on the bright side. I just want you to know that you are allowed to feel exactly what you're feeling, without explanation, without apology.</p>
+          <p>You carry things quietly, and sometimes that means they get heavier than they should. But I see you. And I think you're incredibly brave, not because you never feel sad, but because you keep going anyway, even on the hard days.</p>
+          <p>You don't have to be okay right now. Just be here. That's more than enough.</p>
+        </div>
+        <p class="ltr-sign">— with so much love, always</p>
+      </div>
+      <div class="pull-quote">"Even the darkest night will end, and the sun will rise."</div>
+      <div class="extra-card" style="background:#eef0ff;border:1px solid #c5cdf5">
+        <span class="extra-title">things that might help right now</span>
+        <ul class="suggestion-list">
+          <li>Let yourself cry. Don't hold it in — your body already knows what it needs.</li>
+          <li>Make something warm. Tea, hot chocolate, soup. Take it slow. Hold the cup.</li>
+          <li>Watch something familiar, not something new. Something you already know is safe.</li>
+          <li>Put your phone down and just exist for a little while. The world can wait.</li>
+          <li>Sleep if you can. Tomorrow will feel at least 10% different, and sometimes that's enough to start.</li>
+        </ul>
+      </div>
     </div>
 
-    <script>
-        // Array of floating icons
-        const floatingIcons = ['💜', '🪻', '🌸', '💐', '🌷', '🌺', '✨', '💕', '🦋'];
-        
-        // Create floating icons
-        function createFloatingIcon() {
-            const icon = document.createElement('div');
-            icon.classList.add('heart');
-            icon.innerHTML = floatingIcons[Math.floor(Math.random() * floatingIcons.length)];
-            icon.style.left = Math.random() * 100 + 'vw';
-            icon.style.animationDelay = Math.random() * 5 + 's';
-            document.body.appendChild(icon);
-            
-            setTimeout(() => {
-                icon.remove();
-            }, 6000);
-        }
+    <!-- ── LETTER: TIRED ── -->
+    <div class="letter-panel" id="panel-tired">
+      <button class="back-btn" onclick="backToMoods()">← back to feelings</button>
+      <div class="ltr-mood-header">
+        <span class="ltr-mood-emoji">🌙</span>
+        <h2 class="ltr-mood-title">when you're <em>tired</em></h2>
+      </div>
+      <div class="ltr-card">
+        <div class="ltr-text">
+          <p>I need you to stop for a second. Just stop. You've been going and going and somewhere along the way you forgot that rest isn't something you earn, it's something you're allowed to just take.</p>
+          <p>You don't have to finish everything today. You don't have to be productive. You don't have to explain your exhaustion to anyone, justify it, or apologise for it. You're tired, and that's real, and that's enough of a reason.</p>
+          <p>Go lie down. Close your eyes. The world will still be there when you come back to it.</p>
+        </div>
+        <p class="ltr-sign">— I mean it. go rest.</p>
+      </div>
+      <div class="pull-quote">"Rest is not idleness. It is the work of becoming whole again."</div>
+      <div class="extra-card" style="background:#f0ecff;border:1px solid var(--border)">
+        <span class="extra-title">a little rest ritual</span>
+        <ul class="suggestion-list">
+          <li>Put your phone face down. You don't need to be reachable right now.</li>
+          <li>Dim or turn off the lights. Your eyes have been working hard enough.</li>
+          <li>If you can't sleep, just lie flat and breathe slowly. That counts as rest too.</li>
+          <li>Allow yourself 20 minutes of doing absolutely nothing, with full permission, no guilt.</li>
+          <li>When you come back, pick just one small thing. Only one. The list can wait for you.</li>
+        </ul>
+      </div>
+    </div>
 
-        // Create icons periodically
-        setInterval(createFloatingIcon, 800);
+    <!-- ── LETTER: ANGRY / FRUSTRATED ── -->
+    <div class="letter-panel" id="panel-angry">
+      <button class="back-btn" onclick="backToMoods()">← back to feelings</button>
+      <div class="ltr-mood-header">
+        <span class="ltr-mood-emoji">🔥</span>
+        <h2 class="ltr-mood-title">when you're <em>frustrated</em></h2>
+      </div>
+      <div class="ltr-card">
+        <div class="ltr-text">
+          <p>Your anger is valid. I need you to hear that first, before anything else. You're not being dramatic. You're not being too sensitive. Something didn't feel right, and your whole body agreed. That matters, that's worth listening to.</p>
+          <p>Sometimes we tend to turn our feelings inward when we're frustrated, to wonder if we are the problem, or if we are overreacting. You have good instincts. Trust them a little more than you do.</p>
+          <p>Let it out however you need to. Vent, move, write it all down and throw it away. And when the fire settles a little, the whole world will still be here on the other side of it.</p>
+        </div>
+        <p class="ltr-sign">— still on your side. always.</p>
+      </div>
+      <div class="pull-quote">"You don't have to explain your feelings. You are allowed to have them."</div>
+      <div class="extra-card" style="background:#fff0f5;border:1px solid #f5c0d4">
+        <span class="extra-title">release it</span>
+        <ul class="suggestion-list">
+          <li>Write down exactly what happened and how you felt, don't edit yourself. Then close the page.</li>
+          <li>Do something physical: walk fast, dance it out, stretch hard. Move the feeling through your body.</li>
+          <li>Splash cold water on your face. Small, but it actually works, your nervous system responds.</li>
+          <li>Give yourself full permission to be right about this, at least for now. Revisit later with fresh eyes.</li>
+          <li>Don't make big decisions while you're in it. Wait for the sharpness to soften first.</li>
+        </ul>
+      </div>
+    </div>
 
-        function unlockMessage() {
-            document.getElementById('firstPage').style.display = 'none';
-            document.getElementById('sadPage').classList.add('hidden');
-            document.getElementById('secondPage').style.display = 'block';
-            
-            // Confetti effect with varied icons
-            for(let i = 0; i < 50; i++) {
-                setTimeout(createFloatingIcon, i * 50);
-            }
-        }
+    <!-- ── LETTER: HAPPY ── -->
+    <div class="letter-panel" id="panel-happy">
+      <button class="back-btn" onclick="backToMoods()">← back to feelings</button>
+      <div class="ltr-mood-header">
+        <span class="ltr-mood-emoji">✨</span>
+        <h2 class="ltr-mood-title">when you're <em>happy</em></h2>
+      </div>
+      <div class="ltr-card">
+        <div class="ltr-text">
+          <p>Who doesn't love you when you're happy. There's something about the way you are when things are good, like watching someone remember exactly who they've always been. You glow a little differently, and I don't think you notice.</p>
+          <p>I want you to soak all of this in. Don't rush past it or try to make it useful or productive. Good feelings are allowed to just exist. You don't owe anyone a responsible version of your joy.</p>
+          <p>Stay in this for a while. Tell your friends or family about it later. I'm sure they want to hear every single detail of what made today feel like this.</p>
+        </div>
+        <p class="ltr-sign">— genuinely so happy for you ✨</p>
+      </div>
+      <div class="pull-quote">"There are always flowers for those who want to see them."</div>
+      <div class="extra-card" style="background:#fffaec;border:1px solid #f5dfa0">
+        <span class="extra-title">amplify it</span>
+        <ul class="suggestion-list">
+          <li>Write down what made today feel good. You'll want this exact record on a harder day.</li>
+          <li>Share the feeling, send a voice note to someone who'll be happy with you, not just for you.</li>
+          <li>Do something you've been putting off. Happy days are quietly good days for brave things.</li>
+          <li>Take a photo of the moment, not for anyone else, just to remember how this felt exactly.</li>
+          <li>Treat yourself to something small and deliberate. You deserve it on the good days too.</li>
+        </ul>
+      </div>
+    </div>
 
-        function showSadPage() {
-            document.getElementById('firstPage').style.display = 'none';
-            document.getElementById('sadPage').classList.remove('hidden');
-        }
+    <!-- ── LETTER: ANXIOUS ── -->
+    <div class="letter-panel" id="panel-anxious">
+      <button class="back-btn" onclick="backToMoods()">← back to feelings</button>
+      <div class="ltr-mood-header">
+        <span class="ltr-mood-emoji">🌀</span>
+        <h2 class="ltr-mood-title">when you're <em>anxious</em></h2>
+      </div>
+      <div class="ltr-card">
+        <div class="ltr-text">
+          <p>I need you to take one breath with me. Just one. Your brain is doing that thing where it's trying to solve everything at once, and that is exhausting, but nothing needs to be solved right now, in this moment. Right now, you just need to breathe.</p>
+          <p>You are safe. You are here. Whatever is spinning in your head, you don't have to fix it in the next five minutes. You can put it down for a moment, and pick it back up when you feel steadier. It will still be there, and so will you.</p>
+          <p>There's a world waiting for you. Just take your time.</p>
+        </div>
+        <p class="ltr-sign">— breathe. you're okay.</p>
+      </div>
 
-        function goBack() {
-            unlockMessage();
-        }
+      <!-- BREATHING EXERCISE -->
+      <div class="breath-box">
+        <span class="sec-label" style="margin-bottom:.5rem">guided breathing — 4 · 7 · 8</span>
+        <div class="breath-ring" id="breath-ring">
+          <span style="font-size:1.6rem">🌀</span>
+        </div>
+        <div class="breath-num" id="breath-num"></div>
+        <div class="breath-label" id="breath-lbl">press start when you're ready</div>
+        <button class="breath-btn" id="breath-btn" onclick="toggleBreath()">start</button>
+      </div>
 
-        // Handle form submission
-        const form = document.getElementById('responseForm');
-        if (form) {
-            form.addEventListener('submit', function(e) {
-                // Show celebration effect
-                for(let i = 0; i < 30; i++) {
-                    setTimeout(createFloatingIcon, i * 50);
-                }
-                
-                // After form submits successfully, show confirmation
-                setTimeout(() => {
-                    document.getElementById('responseSection').classList.add('hidden');
-                    document.getElementById('responseSent').classList.remove('hidden');
-                }, 1000);
-            });
-        }
+      <div class="pull-quote">"You are not your anxiety. It visits — it is not who you are."</div>
+      <div class="extra-card" style="background:#eefff8;border:1px solid #a0f0d4">
+        <span class="extra-title">5 · 4 · 3 · 2 · 1 grounding</span>
+        <ul class="suggestion-list">
+          <li><strong>5 things you can see</strong> — look around slowly and name them out loud.</li>
+          <li><strong>4 things you can touch</strong> — notice the texture, the temperature, the weight.</li>
+          <li><strong>3 things you can hear</strong> — even small sounds, even distant ones. Listen.</li>
+          <li><strong>2 things you can smell</strong> — or something you'd like to smell right now.</li>
+          <li><strong>1 thing you're grateful for</strong> — anything. It doesn't have to be big to count.</li>
+        </ul>
+      </div>
+    </div>
 
-        // Check URL hash for successful submission
-        if (window.location.hash === '#sent') {
-            setTimeout(() => {
-                unlockMessage();
-                document.getElementById('responseSection').classList.add('hidden');
-                document.getElementById('responseSent').classList.remove('hidden');
-            }, 500);
-        }
-    </script>
+    <!-- ── LETTER: OPTIMISTIC ── -->
+    <div class="letter-panel" id="panel-missing">
+      <button class="back-btn" onclick="backToMoods()">← back to feelings</button>
+      <div class="ltr-mood-header">
+        <span class="ltr-mood-emoji">🌱</span>
+        <h2 class="ltr-mood-title">when you're <em>optimistic</em></h2>
+      </div>
+      <div class="ltr-card">
+        <div class="ltr-text">
+          <p>There's something beautiful happening when you feel like this — like your chest is a little lighter, like the future actually has room in it. Hold onto that. It's not naïve. It's brave.</p>
+          <p>Optimism isn't about pretending things are perfect. It's about choosing to believe that things can get better, and then showing up for that belief anyway. That takes courage, and you have more of it than you give yourself credit for.</p>
+          <p>Whatever it is you're hoping for right now — I want that for you too. Completely, quietly, without reservation. You deserve good things, and days like this are a reminder that they are genuinely possible.</p>
+        </div>
+        <p class="ltr-sign">— rooting for you, always 🌱</p>
+      </div>
+      <div class="pull-quote">"Hope is not the conviction that something will turn out well, but the certainty that something is worth doing."</div>
+      <div class="extra-card" style="background:#fdf0ff;border:1px solid #e0b8f5">
+        <span class="extra-title">keep this feeling going</span>
+        <ul class="suggestion-list">
+          <li>Write down what you're hoping for right now, specifically. Naming it makes it more real.</li>
+          <li>Do one small thing today that moves toward something you want. Any size step counts.</li>
+          <li>Tell someone about this feeling — optimism is contagious in the best possible way.</li>
+          <li>Let yourself imagine things going well. Visualising good outcomes isn't wishful thinking, it's how we prepare for them.</li>
+          <li>Come back to this feeling on harder days. Screenshot it, journal it, hold onto proof that you felt this way.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- end #mood-section -->
+
+
+  <!-- ══════════════════════════════
+       ALWAYS HERE
+  ══════════════════════════════ -->
+  <section id="always-here">
+    <div class="always-inner">
+
+      <h2 class="always-title reveal">always <em>here</em></h2>
+      <p class="always-sub reveal">the parts of this that don't depend on how you're feeling</p>
+
+      <!-- ── Today's affirmation ── -->
+      <div class="sec-block reveal">
+        <span class="sec-label">today's reminder</span>
+        <div class="aff-card">
+          <p class="aff-text" id="aff-text">loading...</p>
+          <p class="aff-sub">changes every day · just for you</p>
+        </div>
+      </div>
+      
+      <!-- ── Virtual hug ── -->
+      <div class="sec-block reveal">
+        <span class="sec-label">whenever you need it</span>
+        <div class="hug-area" id="hug-area">
+          <button class="hug-btn" onclick="sendHug(event)">send a virtual hug ✦</button>
+          <p class="hug-count" id="hug-count"></p>
+        </div>
+      </div>
+
+      <!-- ── Things I love about you ── -->
+      <div class="sec-block reveal">
+        <span class="sec-label">things I love about you</span>
+        <div class="love-card">
+          <div class="love-display">
+            <p class="love-text" id="love-text">press the button to find out one ✦</p>
+          </div>
+          <button class="love-btn" onclick="revealLove()">tell me one ✦</button>
+          <p class="love-counter" id="love-counter"></p>
+        </div>
+      </div>
+
+      <!-- ── Spotify blend QR ── 
+      <div class="sec-block reveal">
+        <span class="sec-label">our playlist · scan to listen</span>
+        <div class="qr-area">
+          <p style="font-size:.84rem;color:var(--muted);text-align:center;font-style:italic">paste your Spotify blend or playlist link to generate a scannable QR code</p>
+          <div class="input-row">
+            <input class="text-input" id="qr-url" type="url" placeholder="https://open.spotify.com/playlist/..." />
+            <button class="gen-btn" onclick="generateQR()">generate</button>
+          </div>
+          <div id="qr-out">
+            <div id="qr-canvas"></div>
+            <p class="qr-hint">scan with your camera to open the playlist ✦</p>
+          </div>
+        </div>
+      </div>
+      -->
+      <!-- ── Spotify embed ── 
+      <div class="sec-block reveal">
+        <span class="sec-label">our music</span>
+        <div class="spot-area">
+          <p style="font-size:.84rem;color:var(--muted);font-style:italic">paste a Spotify playlist URL to embed it here</p>
+          <div class="input-row">
+            <input class="text-input" id="spot-url" type="url" placeholder="https://open.spotify.com/playlist/..." />
+            <button class="gen-btn" onclick="embedSpotify()">embed</button>
+          </div>
+          <div id="spot-embed"></div>
+        </div>
+      </div>
+      -->
+      <!-- ── Good day counter ── -->
+      <div class="sec-block reveal">
+        <span class="sec-label">good days, counted</span>
+        <div class="day-counter">
+          <div class="day-num" id="day-num">0</div>
+          <div class="day-label">good days marked</div>
+          <button class="day-btn" id="day-btn" onclick="markGoodDay()">mark today as a good day ✦</button>
+          <p class="day-hint" id="day-hint">every good day is worth remembering</p>
+        </div>
+      </div>
+
+      <!-- ── Ambient sounds ── -->
+      <div class="sec-block reveal">
+        <span class="sec-label">ambient sounds</span>
+        <div class="ambient-card">
+          <p class="ambient-intro">pick something to listen to while you're here</p>
+          <div class="ambient-grid">
+            <button class="amb-btn" id="amb-rain" onclick="toggleAmbient('rain')">🌧 rain</button>
+            <button class="amb-btn" id="amb-cafe" onclick="toggleAmbient('cafe')">☕ café</button>
+            <button class="amb-btn" id="amb-night" onclick="toggleAmbient('night')">🌙 night</button>
+          </div>
+          <div class="amb-vol-row">
+            <span class="amb-vol-label">volume</span>
+            <input type="range" class="amb-vol" id="amb-vol" min="0" max="1" step="0.01" value="0.45" oninput="setAmbVol(this.value)">
+          </div>
+          <p class="amb-now" id="amb-now"></p>
+        </div>
+      </div>
+
+      <!-- ── Memory jar ── -->
+      <div class="sec-block reveal">
+        <span class="sec-label">a memory jar</span>
+        <div class="mem-grid">
+          <div class="mem-card">
+            <span class="mem-date">that one time</span>
+            <p class="mem-text">When I awkwardly gave you the reviewers in a bag, and we had an awkward conversation; one where it took me 3 hours to understand what you meant and responded at 11 PM.</p>
+          </div>
+          <div class="mem-card">
+            <span class="mem-date">I think about this</span>
+            <p class="mem-text">When you reached out to me during a Friday and gave your first letter to me, felt surreal honestly.</p>
+          </div>
+          <div class="mem-card">
+            <span class="mem-date">the one where</span>
+            <p class="mem-text">The day you put the purple penguin keychain on your bag, I couldn't stop smiling.</p>
+          </div>
+          <div class="mem-card">
+            <span class="mem-date">and also</span>
+            <p class="mem-text">The day we took our first photo together during graduation, you looked stunning, had me in awe honestly.</p>
+          </div>
+          <div class="mem-card">
+            <span class="mem-date">moreover</span>
+            <p class="mem-text">Finding the joy in being curious about you and the way you see the world.</p>
+          </div>
+          <div class="mem-card">
+            <span class="mem-date">and finally</span>
+            <p class="mem-text">The journey of getting to know you better, and how much fun and awkardness we've had along the way.</p>
+          </div>
+      </div>
+
+      <!-- ── Little Notes ── -->
+      <br>
+      <div class="sec-block reveal">
+        <span class="sec-label">send me a little note</span>
+        <div class="notes-form-card">
+          <p class="notes-prompt">whatever's on your mind — big or small, silly or serious. I want to hear it.</p>
+          <div class="notes-form" id="notes-form">
+            <textarea class="notes-textarea" id="notes-msg" placeholder="write something here..." rows="4"></textarea>
+            <button class="notes-btn" onclick="sendNote()">send it ✦</button>
+          </div>
+          <div class="notes-success" id="notes-success">
+            <span class="notes-success-icon">💜</span>
+            <p class="notes-success-text">received — thank you for sending this.</p>
+            <button class="notes-again-btn" onclick="resetNote()">send another</button>
+          </div>
+          <p class="notes-hint" id="notes-hint"></p>
+        </div>
+      </div>
+
+      <!-- ── Sealed Letter ── -->
+      <div class="sec-block reveal">
+        <span class="sec-label">a sealed letter</span>
+        <div class="sealed-card">
+
+          <!-- Locked state -->
+          <div id="sealed-locked">
+            <div class="sealed-locked-inner">
+              <div class="sealed-wax">🔒</div>
+              <span class="sealed-date-label">opens on</span>
+              <span class="sealed-date-val">15 September 2026</span>
+              <p class="sealed-countdown" id="sealed-countdown">calculating…</p>
+              <p class="sealed-hint">this one is being held for the right moment. it'll be worth the wait.</p>
+              <button class="cal-btn" onclick="toggleCalOptions()">add to calendar ✦</button>
+              <div class="cal-options" id="cal-options">
+                <button class="cal-opt" onclick="addGoogleCal()">📅 Google Calendar</button>
+                <button class="cal-opt" onclick="downloadICS()">📥 Apple / Outlook (.ics)</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Unlocked state (visible from Sept 15 2026 onwards) -->
+          <div id="sealed-open" style="display:none">
+            <div class="sealed-open-inner">
+              <div class="sealed-ribbon">
+                <div class="sealed-ribbon-line"></div>
+                <span class="sealed-ribbon-text">opened · 15 September 2026</span>
+                <div class="sealed-ribbon-line"></div>
+              </div>
+              <div class="ltr-card" style="margin-bottom:0">
+                <div class="ltr-text">
+                  <p>If you're reading this, it means we've made it to September. And I want you to sit with that for a moment — everything that's happened between then and now, every version of yourself you've moved through to get here.</p>
+                  <p>I wrote this back in May, not knowing exactly what the next few months would look like for you. But I knew one thing with complete certainty: that you would keep going. That you'd find your way through whatever came. You always do, even when you're convinced otherwise.</p>
+                  <p>Whatever today looks like — wherever you are, whoever you're becoming — I hope it's something close to what you hoped for. And if it's not quite there yet, that's okay too. Some things just need more time than we plan for. So do you.</p>
+                  <p>You are so deeply cared for. Not just today, not just when things are easy. Always. In all of it.</p>
+                </div>
+                <p class="ltr-sign">— with everything, Ralph 💜</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── Closing ── -->
+      <div class="closing reveal">
+        <div class="divider"></div>
+        <p class="closing-quote">"Whatever you're going through, you're not going through it alone."</p>
+        <p class="closing-name">made with care · Ralph · always</p>
+      </div>
+
+    </div><!-- end always-inner -->
+  </section>
+
+</div><!-- end #main -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+/* ═══════════════════════════════════
+   PARTICLES
+═══════════════════════════════════ */
+const PC = ['#cdb4f5','#b39ddb','#e8deff','#9575cd','#d8c5f8','#f0e8ff'];
+const pcont = document.getElementById('particles');
+for(let i=0;i<22;i++){
+  const p=document.createElement('div');
+  p.className='petal';
+  const s=4+Math.random()*10;
+  Object.assign(p.style,{
+    width:s+'px',height:s+'px',
+    background:PC[Math.floor(Math.random()*PC.length)],
+    left:Math.random()*100+'%',
+    animationDuration:(13+Math.random()*16)+'s',
+    animationDelay:-(Math.random()*18)+'s'
+  });
+  pcont.appendChild(p);
+}
+
+/* ═══════════════════════════════════
+   ENVELOPE
+═══════════════════════════════════ */
+function openEnvelope(){
+  const env=document.getElementById('envelope');
+  if(env.classList.contains('open')) return;
+  env.classList.add('open');
+  setTimeout(()=>{
+    document.getElementById('env-section').style.display='none';
+    const main=document.getElementById('main');
+    main.classList.add('visible');
+    window.scrollTo({top:0});
+    initReveal();
+    initAll();
+  },750);
+}
+
+/* ═══════════════════════════════════
+   SCROLL REVEAL
+═══════════════════════════════════ */
+function initReveal(){
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}});
+  },{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+}
+
+/* ═══════════════════════════════════
+   MOOD LETTERS
+═══════════════════════════════════ */
+function openMood(mood){
+  document.getElementById('mood-picker').style.display='none';
+  document.querySelectorAll('.letter-panel').forEach(p=>p.classList.remove('active'));
+  const panel=document.getElementById('panel-'+mood);
+  if(panel) panel.classList.add('active');
+  const top=document.getElementById('mood-section').offsetTop - 60;
+  window.scrollTo({top,behavior:'smooth'});
+}
+
+function backToMoods(){
+  document.querySelectorAll('.letter-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('mood-picker').style.display='block';
+  stopBreath();
+  window.scrollTo({top:document.getElementById('mood-section').offsetTop - 60,behavior:'smooth'});
+}
+
+/* ═══════════════════════════════════
+   BREATHING (4-7-8)
+═══════════════════════════════════ */
+let breathOn=false, breathTimer=null;
+
+function toggleBreath(){
+  breathOn ? stopBreath() : startBreath();
+}
+
+function startBreath(){
+  breathOn=true;
+  document.getElementById('breath-btn').textContent='stop';
+  runCycle();
+}
+
+function stopBreath(){
+  breathOn=false;
+  clearTimeout(breathTimer);
+  document.getElementById('breath-ring').className='breath-ring';
+  document.getElementById('breath-lbl').textContent="press start when you're ready";
+  document.getElementById('breath-num').textContent='';
+  const btn=document.getElementById('breath-btn');
+  if(btn) btn.textContent='start';
+}
+
+function runCycle(){
+  if(!breathOn) return;
+  phase('inhale',4,'breathe in...',()=>{
+    if(!breathOn) return;
+    phase('hold',7,'hold...',()=>{
+      if(!breathOn) return;
+      phase('exhale',8,'breathe out...',()=>{
+        if(!breathOn) return;
+        breathTimer=setTimeout(runCycle,600);
+      });
+    });
+  });
+}
+
+function phase(cls,secs,label,done){
+  if(!breathOn) return;
+  document.getElementById('breath-ring').className='breath-ring '+cls;
+  document.getElementById('breath-lbl').textContent=label;
+  let c=secs;
+  document.getElementById('breath-num').textContent=c;
+  const iv=setInterval(()=>{
+    if(!breathOn){clearInterval(iv);return;}
+    c--;
+    document.getElementById('breath-num').textContent=c>0?c:'';
+    if(c<=0){clearInterval(iv);if(breathOn) done();}
+  },1000);
+}
+
+/* ═══════════════════════════════════
+   AFFIRMATION (rotates daily)
+═══════════════════════════════════ */
+const AFF=[
+  "You are not a burden. You are a gift that some people haven't learned to receive yet.",
+  "The fact that you keep going, even on hard days, is one of the bravest things about you.",
+  "You deserve softness. Not just from others — from yourself too.",
+  "Somewhere, someone is grateful you exist. More than one someone.",
+  "You are allowed to take up space. All the space you need.",
+  "The way you love people is one of your greatest gifts. Don't let anyone make you shrink it.",
+  "You are growing, even when it doesn't feel like it. Especially then.",
+  "Rest is not laziness. Rest is how you come back to yourself.",
+  "You are more than what you produce, accomplish, or fix.",
+  "You are someone's favourite person in every room you walk into.",
+  "It's okay if today was hard. You still got through it.",
+  "You carry things quietly. But you don't have to carry them alone.",
+  "You are not behind. You are exactly where you need to be.",
+  "The things that make you sensitive also make you extraordinary.",
+  "You are so deeply cared for, even on the days you forget it.",
+  "You don't have to earn your rest, your joy, or your worth.",
+  "Your feelings are real. They don't need to be justified to anyone.",
+  "You make the world softer just by being in it.",
+  "Your presence matters more than you know.",
+  "Being gentle with yourself is not weakness — it is wisdom.",
+  "You are still learning, and that is a beautiful thing.",
+  "The people who truly see you are the ones worth keeping.",
+  "You are resilient in ways you don't even recognise in yourself.",
+  "Today, you don't have to be anything other than what you already are.",
+  "You have survived every hard thing so far. That record stands.",
+  "Joy is not something you have to earn. It is something you are allowed.",
+  "You are deeply, consistently enough.",
+  "Some days the most courageous thing is staying soft in a hard world.",
+  "You are worthy of the love you give so freely to others.",
+  "Just by existing, you make someone's world warmer."
+];
+
+function setAff(){
+  const idx=new Date().getDate()%AFF.length;
+  document.getElementById('aff-text').textContent=AFF[idx];
+}
+
+/* ═══════════════════════════════════
+   VIRTUAL HUG
+═══════════════════════════════════ */
+let hugCount=parseInt(localStorage.getItem('hc')||'0');
+
+function updateHugDisplay(){
+  const el=document.getElementById('hug-count');
+  el.textContent=hugCount===0?'':hugCount===1?'you\'ve sent 1 hug ✦':`you\'ve sent ${hugCount} hugs ✦`;
+}
+
+function sendHug(e){
+  hugCount++;
+  localStorage.setItem('hc',hugCount);
+  updateHugDisplay();
+  const area=document.getElementById('hug-area');
+  const icons=['💜','🌸','✦','💫','🌙','✿'];
+  for(let i=0;i<7;i++){
+    const h=document.createElement('div');
+    h.className='heart-p';
+    h.textContent=icons[Math.floor(Math.random()*icons.length)];
+    h.style.left=(20+Math.random()*60)+'%';
+    h.style.bottom='48px';
+    h.style.animationDelay=(Math.random()*.5)+'s';
+    area.appendChild(h);
+    setTimeout(()=>h.remove(),1600);
+  }
+}
+
+/* ═══════════════════════════════════
+   QR CODE GENERATOR
+═══════════════════════════════════ */
+let qrObj=null;
+function generateQR(){
+  const url=document.getElementById('qr-url').value.trim();
+  if(!url) return;
+  const out=document.getElementById('qr-out');
+  const canvas=document.getElementById('qr-canvas');
+  canvas.innerHTML='';
+  out.classList.remove('on');
+  if(qrObj){try{qrObj.clear();}catch(e){} qrObj=null;}
+  try{
+    qrObj=new QRCode(canvas,{
+      text:url,width:200,height:200,
+      colorDark:'#5c3499',colorLight:'#faf8ff',
+      correctLevel:QRCode.CorrectLevel.H
+    });
+    out.classList.add('on');
+  }catch(err){console.error(err);}
+}
+
+/* ═══════════════════════════════════
+   SPOTIFY EMBED
+═══════════════════════════════════ */
+function embedSpotify(){
+  const url=document.getElementById('spot-url').value.trim();
+  if(!url) return;
+  let src=url;
+  const m=url.match(/spotify\.com\/(playlist|album|track|artist)\/([a-zA-Z0-9]+)/);
+  if(m) src=`https://open.spotify.com/embed/${m[1]}/${m[2]}?utm_source=generator`;
+  document.getElementById('spot-embed').innerHTML=
+    `<div class="spot-iframe"><iframe style="border-radius:12px" src="${src}" width="100%" height="152" frameborder="0" allowfullscreen allow="autoplay;clipboard-write;encrypted-media;fullscreen;picture-in-picture" loading="lazy"></iframe></div>`;
+}
+
+/* ═══════════════════════════════════
+   GOOD DAY COUNTER
+═══════════════════════════════════ */
+let goodDays=parseInt(localStorage.getItem('gd')||'0');
+const lastDay=localStorage.getItem('gd_date');
+const today=new Date().toDateString();
+
+function initGoodDay(){
+  document.getElementById('day-num').textContent=goodDays;
+  if(lastDay===today){
+    const btn=document.getElementById('day-btn');
+    btn.disabled=true;
+    btn.textContent='already marked today ✦';
+    document.getElementById('day-hint').textContent='come back tomorrow';
+  }
+}
+
+function markGoodDay(){
+  goodDays++;
+  localStorage.setItem('gd',goodDays);
+  localStorage.setItem('gd_date',today);
+  document.getElementById('day-num').textContent=goodDays;
+  const btn=document.getElementById('day-btn');
+  btn.disabled=true;
+  btn.textContent='marked ✦';
+  document.getElementById('day-hint').textContent=
+    `${goodDays} good ${goodDays===1?'day':'days'} remembered`;
+}
+
+/* ═══════════════════════════════════
+   LITTLE NOTES (Formspree)
+═══════════════════════════════════ */
+async function sendNote(){
+  const msg=document.getElementById('notes-msg').value.trim();
+  const hint=document.getElementById('notes-hint');
+  if(!msg){hint.textContent='write something first ✦';return;}
+  hint.textContent='sending...';
+  const btn=document.querySelector('.notes-btn');
+  btn.disabled=true;
+  try{
+    const res=await fetch('https://formspree.io/f/xeelaeee',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({message:msg})
+    });
+    if(res.ok){
+      document.getElementById('notes-form').style.display='none';
+      document.getElementById('notes-success').classList.add('show');
+      hint.textContent='';
+    } else {
+      hint.textContent='something went wrong — try again?';
+      btn.disabled=false;
+    }
+  }catch(e){
+    hint.textContent='could not send — check your connection.';
+    btn.disabled=false;
+  }
+}
+
+function resetNote(){
+  document.getElementById('notes-msg').value='';
+  document.getElementById('notes-form').style.display='flex';
+  document.getElementById('notes-success').classList.remove('show');
+  document.getElementById('notes-hint').textContent='';
+  document.querySelector('.notes-btn').disabled=false;
+}
+
+
+function initAll(){
+  setAff();
+  updateHugDisplay();
+  initGoodDay();
+  checkSealedLetter();
+}
+
+/* ═══════════════════════════════════
+   THINGS I LOVE ABOUT YOU
+═══════════════════════════════════ */
+const LOVE = [
+  "The fact that you reached out first. That took something, and I don't think you realise how much it meant.",
+  "The way you put the purple penguin keychain on your bag. I couldn't stop smiling about it for the rest of the day.",
+  "How you looked at graduation — genuinely stunning, completely unaware of it. That's a rare combination.",
+  "The 11 PM message where things finally clicked between us, after three hours of me completely misreading what you meant. Worth every confused minute.",
+  "The way you're curious — not in a surface level way, but the kind that makes you actually want to understand things deeply.",
+  "That first letter you gave me on a Friday. It felt surreal to hold. Still does when I think about it.",
+  "The way you carry yourself — quietly, but with so much behind it.",
+  "How specific you are when you talk about things that matter to you. You don't do vague. I love that about you.",
+  "The version of you that exists in all the small in-between moments — waiting, walking, just being somewhere. That one especially.",
+  "How much you actually pay attention. Not just to big things. To all of it.",
+  "The way we found our footing — awkwardly, gradually, honestly. I wouldn't have it any other way.",
+  "The fact that you let me in slowly, at your own pace. I never took that for granted.",
+  "How you make ordinary things feel worth noticing. I see more because of you.",
+  "The courage it took to hand me that letter. I know it wasn't easy. I think about that often.",
+  "The way you laugh when something genuinely catches you off guard — unfiltered, completely real.",
+  "How much care you put into the things that matter to you. It shows in everything.",
+  "The whole journey of getting to know you — every awkward bit, every moment it clicked. All of it.",
+];
+let loveShown = [];
+
+function revealLove() {
+  if (loveShown.length === LOVE.length) loveShown = [];
+  const remaining = LOVE.map((_, i) => i).filter(i => !loveShown.includes(i));
+  const idx = remaining[Math.floor(Math.random() * remaining.length)];
+  loveShown.push(idx);
+
+  const el = document.getElementById('love-text');
+  el.classList.add('fade');
+  setTimeout(() => {
+    el.textContent = LOVE[idx];
+    el.classList.remove('fade');
+  }, 350);
+
+  const shown = loveShown.length;
+  document.getElementById('love-counter').textContent =
+    shown === LOVE.length
+      ? `all ${LOVE.length} — and still counting ✦`
+      : `${shown} of ${LOVE.length} so far`;
+}
+
+/* ═══════════════════════════════════
+   AMBIENT SOUNDS (Web Audio API)
+═══════════════════════════════════ */
+let audioCtx = null;
+let ambActive = null;
+let ambNodes = [];
+let ambMasterGain = null;
+let cricketTimeout = null;
+
+function getCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function makeNoise(ctx, type) {
+  const rate = ctx.sampleRate;
+  const buf = ctx.createBuffer(2, rate * 4, rate);
+  for (let ch = 0; ch < 2; ch++) {
+    const d = buf.getChannelData(ch);
+    if (type === 'white') {
+      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    } else { // brown
+      let last = 0;
+      for (let i = 0; i < d.length; i++) {
+        const w = Math.random() * 2 - 1;
+        d[i] = (last + 0.02 * w) / 1.02;
+        last = d[i];
+        d[i] *= 3.5;
+      }
+    }
+  }
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  src.loop = true;
+  return src;
+}
+
+function toggleAmbient(type) {
+  if (ambActive === type) { stopAmbient(); return; }
+  stopAmbient();
+  const ctx = getCtx();
+  if (ctx.state === 'suspended') ctx.resume();
+  ambMasterGain = ctx.createGain();
+  ambMasterGain.gain.value = parseFloat(document.getElementById('amb-vol').value);
+  ambMasterGain.connect(ctx.destination);
+  ambActive = type;
+
+  if (type === 'rain') {
+    // Layered rain: heavy rainfall body + high-freq drizzle shimmer
+    const body = makeNoise(ctx, 'white');
+    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1600; lp.Q.value = 0.3;
+    const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 250;
+    body.connect(hp); hp.connect(lp); lp.connect(ambMasterGain); body.start();
+    ambNodes.push(body);
+    const shimmer = makeNoise(ctx, 'white');
+    const shLp = ctx.createBiquadFilter(); shLp.type = 'bandpass'; shLp.frequency.value = 5000; shLp.Q.value = 0.8;
+    const shG = ctx.createGain(); shG.gain.value = 0.12;
+    shimmer.connect(shLp); shLp.connect(shG); shG.connect(ambMasterGain); shimmer.start();
+    ambNodes.push(shimmer);
+
+  } else if (type === 'cafe') {
+    // Warm murmur base
+    const murmur = makeNoise(ctx, 'brown');
+    const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 520; bp.Q.value = 0.4;
+    const gM = ctx.createGain(); gM.gain.value = 1.1;
+    murmur.connect(bp); bp.connect(gM); gM.connect(ambMasterGain); murmur.start();
+    ambNodes.push(murmur);
+    // Subtle clatter/ambience layer
+    const clatter = makeNoise(ctx, 'white');
+    const clLp = ctx.createBiquadFilter(); clLp.type = 'lowpass'; clLp.frequency.value = 3500;
+    const clHp = ctx.createBiquadFilter(); clHp.type = 'highpass'; clHp.frequency.value = 800;
+    const clG = ctx.createGain(); clG.gain.value = 0.09;
+    clatter.connect(clHp); clHp.connect(clLp); clLp.connect(clG); clG.connect(ambMasterGain); clatter.start();
+    ambNodes.push(clatter);
+
+  } else if (type === 'night') {
+    // Deep low hum (distant crickets field)
+    const hum = makeNoise(ctx, 'brown');
+    const humLp = ctx.createBiquadFilter(); humLp.type = 'lowpass'; humLp.frequency.value = 350;
+    const humG = ctx.createGain(); humG.gain.value = 0.45;
+    hum.connect(humLp); humLp.connect(humG); humG.connect(ambMasterGain); hum.start();
+    ambNodes.push(hum);
+    scheduleCrickets(ctx);
+  }
+
+  document.querySelectorAll('.amb-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('amb-' + type).classList.add('active');
+  const labels = { rain: 'now playing · rain', cafe: 'now playing · café', night: 'now playing · night' };
+  document.getElementById('amb-now').textContent = labels[type];
+}
+
+function scheduleCrickets(ctx) {
+  if (ambActive !== 'night') return;
+  // Chirp burst: 2–5 quick pulses
+  const pulses = 2 + Math.floor(Math.random() * 4);
+  for (let p = 0; p < pulses; p++) {
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    const t = ctx.currentTime + p * 0.06;
+    osc.type = 'sine';
+    osc.frequency.value = 3000 + Math.random() * 800;
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(0.04, t + 0.025);
+    g.gain.linearRampToValueAtTime(0, t + 0.055);
+    osc.connect(g); g.connect(ambMasterGain);
+    osc.start(t); osc.stop(t + 0.06);
+  }
+  cricketTimeout = setTimeout(() => scheduleCrickets(ctx), 200 + Math.random() * 600);
+}
+
+function stopAmbient() {
+  clearTimeout(cricketTimeout);
+  ambNodes.forEach(n => { try { n.stop(); } catch(e) {} });
+  ambNodes = [];
+  if (ambMasterGain) { try { ambMasterGain.disconnect(); } catch(e) {} ambMasterGain = null; }
+  ambActive = null;
+  document.querySelectorAll('.amb-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('amb-now').textContent = '';
+}
+
+function setAmbVol(val) {
+  if (ambMasterGain) ambMasterGain.gain.value = parseFloat(val);
+}
+
+/* ═══════════════════════════════════
+   SEALED LETTER
+═══════════════════════════════════ */
+function checkSealedLetter() {
+  const unlock = new Date('2026-09-15T00:00:00');
+  if (new Date() >= unlock) {
+    document.getElementById('sealed-locked').style.display = 'none';
+    document.getElementById('sealed-open').style.display = 'block';
+  } else {
+    updateSealedCountdown(unlock);
+    setInterval(() => updateSealedCountdown(unlock), 60000);
+  }
+}
+
+function updateSealedCountdown(unlock) {
+  const diff = unlock - new Date();
+  const days = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+  const el = document.getElementById('sealed-countdown');
+  if (days > 0) el.textContent = `${days} day${days !== 1 ? 's' : ''} away`;
+  else if (hours > 0) el.textContent = `opens in ${hours} hour${hours !== 1 ? 's' : ''}`;
+  else el.textContent = 'opening very soon…';
+}
+
+function toggleCalOptions() {
+  document.getElementById('cal-options').classList.toggle('show');
+}
+
+function addGoogleCal() {
+  const url = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+    '&text=Open+your+sealed+letter+%F0%9F%92%9C' +
+    '&dates=20260915T000000Z/20260915T010000Z' +
+    '&details=A+letter+has+been+waiting+for+you.+Go+open+it.';
+  window.open(url, '_blank');
+}
+
+function downloadICS() {
+  const ics = [
+    'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//CarePackage//EN',
+    'BEGIN:VEVENT',
+    'DTSTART:20260915T000000Z','DTEND:20260915T010000Z',
+    'SUMMARY:Open your sealed letter 💜',
+    'DESCRIPTION:A letter has been waiting for you. Go open it.',
+    'END:VEVENT','END:VCALENDAR'
+  ].join('\r\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/calendar;charset=utf8,' + encodeURIComponent(ics);
+  a.download = 'sealed-letter.ics';
+  a.click();
+}
+
+</script>
 </body>
 </html>
