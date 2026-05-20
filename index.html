@@ -206,10 +206,8 @@ body{background:var(--bg);color:var(--ink);font-family:'Nunito',sans-serif;font-
 .amb-btn{background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:.6rem 1.4rem;font-family:'Nunito',sans-serif;font-size:.84rem;color:var(--deep);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.4rem}
 .amb-btn:hover{background:var(--surface2);border-color:var(--violet)}
 .amb-btn.active{background:var(--violet);color:#fff;border-color:var(--violet)}
-.amb-vol-row{display:flex;align-items:center;gap:1rem;padding:0 .5rem}
-.amb-vol-label{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--lav);white-space:nowrap}
-.amb-vol{flex:1;accent-color:var(--violet);cursor:pointer}
-.amb-now{font-size:.74rem;color:var(--lav);font-style:italic;text-align:center;margin:0;min-height:1em}
+.amb-player{display:flex;flex-direction:column;gap:.6rem;margin-top:.4rem}
+.amb-now{font-size:.74rem;color:var(--lav);font-style:italic;text-align:center;margin:0}
 
 /* ── sealed letter ── */
 .sealed-card{background:var(--white);border:1px solid var(--border);border-radius:18px;overflow:hidden}
@@ -612,11 +610,16 @@ body{background:var(--bg);color:var(--ink);font-family:'Nunito',sans-serif;font-
             <button class="amb-btn" id="amb-cafe" onclick="toggleAmbient('cafe')">☕ café</button>
             <button class="amb-btn" id="amb-night" onclick="toggleAmbient('night')">🌙 night</button>
           </div>
-          <div class="amb-vol-row">
-            <span class="amb-vol-label">volume</span>
-            <input type="range" class="amb-vol" id="amb-vol" min="0" max="1" step="0.01" value="0.45" oninput="setAmbVol(this.value)">
+          <div class="amb-player" id="amb-player" style="display:none">
+            <iframe id="amb-iframe"
+              width="100%" height="80"
+              frameborder="0"
+              allow="autoplay; encrypted-media"
+              allowfullscreen
+              style="border-radius:12px;display:block">
+            </iframe>
+            <p class="amb-now" id="amb-now"></p>
           </div>
-          <p class="amb-now" id="amb-now"></p>
         </div>
       </div>
 
@@ -700,10 +703,10 @@ body{background:var(--bg);color:var(--ink);font-family:'Nunito',sans-serif;font-
               </div>
               <div class="ltr-card" style="margin-bottom:0">
                 <div class="ltr-text">
-                  <p>If you're reading this, it means we've made it to September. And I want you to sit with that for a moment — everything that's happened between then and now, every version of yourself you've moved through to get here.</p>
+                  <p>If you're reading this, it means we've made it to September. And I want you to sit with that for a moment, everything that's happened between then and now, every version of yourself you've moved through to get here.</p>
                   <p>I wrote this back in May, not knowing exactly what the next few months would look like for you. But I knew one thing with complete certainty: that you would keep going. That you'd find your way through whatever came. You always do, even when you're convinced otherwise.</p>
                   <p>Whatever today looks like — wherever you are, whoever you're becoming — I hope it's something close to what you hoped for. And if it's not quite there yet, that's okay too. Some things just need more time than we plan for. So do you.</p>
-                  <p>You are so deeply cared for. Not just today, not just when things are easy. Always. In all of it.</p>
+                  <p>You are so deeply cared for. Not just today, not just when things are easy. Always. In all of it. Happy 18th Birthday, Ityy! 💜</p>
                 </div>
                 <p class="ltr-sign">— with everything, Ralph 💜</p>
               </div>
@@ -1028,23 +1031,17 @@ function initAll(){
    THINGS I LOVE ABOUT YOU
 ═══════════════════════════════════ */
 const LOVE = [
-  "The fact that you reached out first. That took something, and I don't think you realise how much it meant.",
+  "The fact that you reached out. That took something, and I don't think you realise how much it meant.",
   "The way you put the purple penguin keychain on your bag. I couldn't stop smiling about it for the rest of the day.",
-  "How you looked at graduation — genuinely stunning, completely unaware of it. That's a rare combination.",
+  "How you looked at graduation, genuinely stunning, completely unaware of it. That's a rare combination.",
   "The 11 PM message where things finally clicked between us, after three hours of me completely misreading what you meant. Worth every confused minute.",
-  "The way you're curious — not in a surface level way, but the kind that makes you actually want to understand things deeply.",
-  "That first letter you gave me on a Friday. It felt surreal to hold. Still does when I think about it.",
-  "The way you carry yourself — quietly, but with so much behind it.",
-  "How specific you are when you talk about things that matter to you. You don't do vague. I love that about you.",
-  "The version of you that exists in all the small in-between moments — waiting, walking, just being somewhere. That one especially.",
+  "The way you carry yourself, quietly and elegantly, but with so much behind it.",
   "How much you actually pay attention. Not just to big things. To all of it.",
-  "The way we found our footing — awkwardly, gradually, honestly. I wouldn't have it any other way.",
-  "The fact that you let me in slowly, at your own pace. I never took that for granted.",
   "How you make ordinary things feel worth noticing. I see more because of you.",
   "The courage it took to hand me that letter. I know it wasn't easy. I think about that often.",
-  "The way you laugh when something genuinely catches you off guard — unfiltered, completely real.",
+  "The way you laugh when something genuinely catches you off guard, unfiltered, completely real.",
   "How much care you put into the things that matter to you. It shows in everything.",
-  "The whole journey of getting to know you — every awkward bit, every moment it clicked. All of it.",
+  "The whole journey of getting to know you, every awkward bit, every moment it clicked. All of it.",
 ];
 let loveShown = [];
 
@@ -1069,127 +1066,36 @@ function revealLove() {
 }
 
 /* ═══════════════════════════════════
-   AMBIENT SOUNDS (Web Audio API)
+   AMBIENT SOUNDS (YouTube embeds)
 ═══════════════════════════════════ */
-let audioCtx = null;
+const AMB_SOURCES = {
+  rain:  { id: 'eTeD8DAta4c', label: 'now playing · rain' },
+  cafe:  { id: 'uiMXGIG_DQo', label: 'now playing · café' },
+  night: { id: '0aay6rLcEdU', label: 'now playing · night' },
+};
 let ambActive = null;
-let ambNodes = [];
-let ambMasterGain = null;
-let cricketTimeout = null;
-
-function getCtx() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  return audioCtx;
-}
-
-function makeNoise(ctx, type) {
-  const rate = ctx.sampleRate;
-  const buf = ctx.createBuffer(2, rate * 4, rate);
-  for (let ch = 0; ch < 2; ch++) {
-    const d = buf.getChannelData(ch);
-    if (type === 'white') {
-      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-    } else { // brown
-      let last = 0;
-      for (let i = 0; i < d.length; i++) {
-        const w = Math.random() * 2 - 1;
-        d[i] = (last + 0.02 * w) / 1.02;
-        last = d[i];
-        d[i] *= 3.5;
-      }
-    }
-  }
-  const src = ctx.createBufferSource();
-  src.buffer = buf;
-  src.loop = true;
-  return src;
-}
 
 function toggleAmbient(type) {
   if (ambActive === type) { stopAmbient(); return; }
   stopAmbient();
-  const ctx = getCtx();
-  if (ctx.state === 'suspended') ctx.resume();
-  ambMasterGain = ctx.createGain();
-  ambMasterGain.gain.value = parseFloat(document.getElementById('amb-vol').value);
-  ambMasterGain.connect(ctx.destination);
   ambActive = type;
 
-  if (type === 'rain') {
-    // Layered rain: heavy rainfall body + high-freq drizzle shimmer
-    const body = makeNoise(ctx, 'white');
-    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1600; lp.Q.value = 0.3;
-    const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 250;
-    body.connect(hp); hp.connect(lp); lp.connect(ambMasterGain); body.start();
-    ambNodes.push(body);
-    const shimmer = makeNoise(ctx, 'white');
-    const shLp = ctx.createBiquadFilter(); shLp.type = 'bandpass'; shLp.frequency.value = 5000; shLp.Q.value = 0.8;
-    const shG = ctx.createGain(); shG.gain.value = 0.12;
-    shimmer.connect(shLp); shLp.connect(shG); shG.connect(ambMasterGain); shimmer.start();
-    ambNodes.push(shimmer);
-
-  } else if (type === 'cafe') {
-    // Warm murmur base
-    const murmur = makeNoise(ctx, 'brown');
-    const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 520; bp.Q.value = 0.4;
-    const gM = ctx.createGain(); gM.gain.value = 1.1;
-    murmur.connect(bp); bp.connect(gM); gM.connect(ambMasterGain); murmur.start();
-    ambNodes.push(murmur);
-    // Subtle clatter/ambience layer
-    const clatter = makeNoise(ctx, 'white');
-    const clLp = ctx.createBiquadFilter(); clLp.type = 'lowpass'; clLp.frequency.value = 3500;
-    const clHp = ctx.createBiquadFilter(); clHp.type = 'highpass'; clHp.frequency.value = 800;
-    const clG = ctx.createGain(); clG.gain.value = 0.09;
-    clatter.connect(clHp); clHp.connect(clLp); clLp.connect(clG); clG.connect(ambMasterGain); clatter.start();
-    ambNodes.push(clatter);
-
-  } else if (type === 'night') {
-    // Deep low hum (distant crickets field)
-    const hum = makeNoise(ctx, 'brown');
-    const humLp = ctx.createBiquadFilter(); humLp.type = 'lowpass'; humLp.frequency.value = 350;
-    const humG = ctx.createGain(); humG.gain.value = 0.45;
-    hum.connect(humLp); humLp.connect(humG); humG.connect(ambMasterGain); hum.start();
-    ambNodes.push(hum);
-    scheduleCrickets(ctx);
-  }
-
+  const { id, label } = AMB_SOURCES[type];
+  const src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&loop=1&playlist=${id}&controls=1&rel=0&modestbranding=1`;
+  document.getElementById('amb-iframe').src = src;
+  document.getElementById('amb-player').style.display = 'flex';
+  document.getElementById('amb-now').textContent = label;
   document.querySelectorAll('.amb-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('amb-' + type).classList.add('active');
-  const labels = { rain: 'now playing · rain', cafe: 'now playing · café', night: 'now playing · night' };
-  document.getElementById('amb-now').textContent = labels[type];
-}
-
-function scheduleCrickets(ctx) {
-  if (ambActive !== 'night') return;
-  // Chirp burst: 2–5 quick pulses
-  const pulses = 2 + Math.floor(Math.random() * 4);
-  for (let p = 0; p < pulses; p++) {
-    const osc = ctx.createOscillator();
-    const g = ctx.createGain();
-    const t = ctx.currentTime + p * 0.06;
-    osc.type = 'sine';
-    osc.frequency.value = 3000 + Math.random() * 800;
-    g.gain.setValueAtTime(0, t);
-    g.gain.linearRampToValueAtTime(0.04, t + 0.025);
-    g.gain.linearRampToValueAtTime(0, t + 0.055);
-    osc.connect(g); g.connect(ambMasterGain);
-    osc.start(t); osc.stop(t + 0.06);
-  }
-  cricketTimeout = setTimeout(() => scheduleCrickets(ctx), 200 + Math.random() * 600);
 }
 
 function stopAmbient() {
-  clearTimeout(cricketTimeout);
-  ambNodes.forEach(n => { try { n.stop(); } catch(e) {} });
-  ambNodes = [];
-  if (ambMasterGain) { try { ambMasterGain.disconnect(); } catch(e) {} ambMasterGain = null; }
   ambActive = null;
-  document.querySelectorAll('.amb-btn').forEach(b => b.classList.remove('active'));
+  const iframe = document.getElementById('amb-iframe');
+  iframe.src = '';
+  document.getElementById('amb-player').style.display = 'none';
   document.getElementById('amb-now').textContent = '';
-}
-
-function setAmbVol(val) {
-  if (ambMasterGain) ambMasterGain.gain.value = parseFloat(val);
+  document.querySelectorAll('.amb-btn').forEach(b => b.classList.remove('active'));
 }
 
 /* ═══════════════════════════════════
